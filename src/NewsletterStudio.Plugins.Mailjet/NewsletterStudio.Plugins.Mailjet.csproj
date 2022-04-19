@@ -9,21 +9,28 @@
 		<PackageId>NewsletterStudio.Plugins.Mailjet</PackageId>
 
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageProjectUrl></PackageProjectUrl>
+		<PackageProjectUrl>https://www.newsletterstudio.org</PackageProjectUrl>
 		<PackageTags>Umbraco</PackageTags>
 
-		<RepositoryUrl></RepositoryUrl>
+		<RepositoryUrl>https://github.com/enkelmedia/NewsletterStudio.Plugins.Mailjet</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 
 		<Description>Plugin for Newsletter Studio to send emails via the Mailjet API.</Description>
 		<PackageReleaseNotes></PackageReleaseNotes>
 
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>false</IncludeSymbols>
 
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<PackageIcon>icon.png</PackageIcon>
+
+		<Version>1.0.0</Version>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<PackageVersion>1.0.0-beta1</PackageVersion>
+		<InformationalVersion>1.0.0</InformationalVersion>
+		<Authors>Enkel Media Stockholm AB</Authors>
+		<Copyright>Enkel Media Stockholm AB</Copyright>
+		
 	</PropertyGroup>
 
 	<!-- Package files -->
