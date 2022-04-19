@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+	<!-- NuGet package info -->
+	<PropertyGroup>
+		<PackageId>NewsletterStudio.Plugins.Mailjet</PackageId>
+
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl></PackageProjectUrl>
+		<PackageTags>Umbraco</PackageTags>
+
+		<RepositoryUrl></RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+
+		<Description>Plugin for Newsletter Studio to send emails via the Mailjet API.</Description>
+		<PackageReleaseNotes></PackageReleaseNotes>
+
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<ContentTargetFolders>content</ContentTargetFolders>
+		<PackageIcon>icon.png</PackageIcon>
+	</PropertyGroup>
+
+	<!-- Package files -->
+	<ItemGroup>
+		<Content Include="content\App_Plugins\**\*.*">
+			<PackagePath>content\App_Plugins</PackagePath>
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+		<!-- Target file to copy App_Plugins in net50 -->
+		<None Include="build\**\*.*">
+			<Pack>True</Pack>
+			<PackagePath>buildTransitive</PackagePath>
+		</None>
+		<None Remove="content\App_Plugins\NewsletterStudio.Plugins.Mailjet\mailjet.settings.controller.js" />
+		<None Remove="content\App_Plugins\NewsletterStudio.Plugins.Mailjet\package.manifest" />
+		<None Include="build\icon.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Mailjet.Api" Version="1.2.2" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+		<Reference Include="System.Web" />
+		<PackageReference Include="UmbracoCms.Web" Version="8.1.0" IncludeAssets="compile" />
+		<PackageReference Include="NewsletterStudio.Core" Version="3.0.0" IncludeAssets="compile" />
+		<PackageReference Include="NewsletterStudio.Web" Version="3.0.0" IncludeAssets="compile" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net50'">
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.1" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.1" />
+		<PackageReference Include="NewsletterStudio.Core" Version="4.0.0" IncludeAssets="compile" />
+		<PackageReference Include="NewsletterStudio.Web" Version="4.0.0" IncludeAssets="compile" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="AppStart\" />
+	  <Folder Include="Backoffice\Models\" />
+	  <Folder Include="Webhook\Models\" />
+	</ItemGroup>
+
+	<Target Name="RemoveLuceneAnalyzer" BeforeTargets="CoreCompile">
+		<ItemGroup>
+			<Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Lucene.Net.CodeAnalysis.CSharp'" />
+		</ItemGroup>
+	</Target>
+
+</Project>

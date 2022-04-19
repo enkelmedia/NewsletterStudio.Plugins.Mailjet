@@ -1,0 +1,31 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	
+	<PropertyGroup>
+		<!--- Assumes That NuGet-package name matches the folder in App -->
+		<PackageContentFiles>$(MSBuildThisFileDirectory)..\content\App_Plugins\$(MSBuildThisFileName)\**\*.*</PackageContentFiles>
+	</PropertyGroup>
+
+	<Target Name="CopyPackageAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<PackageContentFiles Include="$(PackageContentFiles)" />
+		</ItemGroup>
+
+		<Message Text="Copying $(MSBuildThisFileName) files: $(PackageContentFiles) - #@(PackageContentFiles->Count()) files" Importance="high" />
+
+		<Copy
+            SourceFiles="@(PackageContentFiles)"
+            DestinationFiles="@(PackageContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\$(MSBuildThisFileName)\%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true" />
+
+	</Target>
+
+	<Target Name="ClearPackageAssets" BeforeTargets="Clean">
+		<ItemGroup>
+			<PackageUiFilesDir Include="$(MSBuildProjectDirectory)\App_Plugins\$(MSBuildThisFileName)\" />
+		</ItemGroup>
+		<Message Text="Clear old filder for $(MSBuildThisFileName)" Importance="high" />
+		<RemoveDir Directories="@(PackageUiFilesDir)"  />
+	</Target>
+
+</Project>

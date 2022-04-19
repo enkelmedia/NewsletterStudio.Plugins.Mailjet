@@ -1,0 +1,68 @@
+﻿@using System.Web.Mvc
+@using NewsletterStudio.Core.Backoffice.PropertyEditors.MailingListPicker.FrontendModels
+@using NewsletterStudio.Core.Models
+@using NewsletterStudio.Core.Models.System
+@using NewsletterStudio.Core.Public
+@using NewsletterStudio.Core.Public.Models
+@using Newtonsoft.Json
+@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+    /*
+     * Newsletter Studio Sign Up Example
+     * This is a fully functional signup example to add a recipient to a given Mailing List in Newsletter Studio.
+     * Use this as an inspiration for your implementation, a best practice would be to move the C#-code into ie. a "SurfaceController"
+     * or something similar.
+     * NOTE: If you want to keep this file and make changes, please create a copy and work with this as upgrades might overwrite this file.
+     */
+
+    bool hasMailingList = Model.MacroParameters["mailingList"] != null;
+}
+@if (hasMailingList)
+{
+    bool showConfirmation = false;
+    CommandResult result = new CommandResult();
+
+    var json = Model.MacroParameters["mailingList"].ToString().Replace("&quot;", "\"");
+    var mailingListSettings = JsonConvert.DeserializeObject<List<MailingListPropertyEditorValueModel>>(json);
+
+    if (Request.Form.HasKeys() && Request.Form["email"] != null)
+    {
+        var service = DependencyResolver.Current.GetService<INewsletterStudioService>();
+
+        var workspaceGroupedMailingLists = mailingListSettings.GroupBy(x => x.WorkspaceKey);
+        
+        foreach (var workspaceMailingListGroup in workspaceGroupedMailingLists)
+        {
+            var addRecipientRequest = new AddRecipientRequest(Request.Form["email"])
+                .ForWorkspace(workspaceMailingListGroup.Key)
+                .WithSource("Signup Macro")
+                .WithName(Request.Form["name"]);
+
+            foreach (var list in workspaceMailingListGroup)
+            {
+                addRecipientRequest.SubscribeTo(list.MailingListKey);
+            }
+            
+            result.Append(service.AddRecipient(addRecipientRequest));
+            
+        }
+        
+        showConfirmation = result.Success;
+    }
+
+    if (showConfirmation)
+    {
+        <p>Thank you for signing up</p>
+    }
+    else
+    {
+        <form method="post">
+            
+            <input type="text" name="name" placeholder="Name"/>
+            <input type="text" name="email" placeholder="Email"/>
+
+            <button>Sign up</button>
+        </form>
+
+    }
+}
