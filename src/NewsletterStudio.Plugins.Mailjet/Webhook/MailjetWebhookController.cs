@@ -114,10 +114,7 @@ namespace NewsletterStudio.Plugins.Mailjet.Webhook
 
             foreach (var mjEvent in mjEvents)
             {
-                //TODO: Implement something that sets status etc. Could be done in batches if needed ie:
-
                 _bounceOperationsService.SetTrackingItemError(mjEvent.MessageId.ToString(), mjEvent.Error);
-
             }
 
             return new DoHandleResponse()

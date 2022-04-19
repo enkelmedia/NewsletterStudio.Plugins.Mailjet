@@ -13,7 +13,6 @@ namespace NewsletterStudio.Plugins.Mailjet
 {
     public class MailjetEmailServiceProvider : IEmailServiceProvider
     {
-
         public const string ProviderAlias = "mailjet"; 
         public string Alias => ProviderAlias;
         public string DisplayName => "Mailjet";
@@ -58,7 +57,6 @@ namespace NewsletterStudio.Plugins.Mailjet
                 Resource = global::Mailjet.Client.Resources.Send.Resource
             };
 
-            //TODO: Populate messages.
             var arr = new JArray();
             foreach (var message in batch)
             {
@@ -66,11 +64,7 @@ namespace NewsletterStudio.Plugins.Mailjet
                 arr.Add(messageObject);
             }
             
-            //TODO: Would be nice if we could set the "CustomID" as well, could be useful.
-            //      I also think that using the "Workspace key" might be better since when/if
-            //      A Campaign/Transactional is removed we don't know what workspace to look for the recipient in.
             request.Property(global::Mailjet.Client.Resources.Send.Messages, arr);
-            
 
             if (configuration.SandboxMode)
             {
@@ -84,7 +78,6 @@ namespace NewsletterStudio.Plugins.Mailjet
                 }
             );
 
-                
             MailjetClient client = new MailjetClient(configuration.ApiKey, configuration.ApiSecret)
             {
                 Version = ApiVersion.V3_1
@@ -106,10 +99,8 @@ namespace NewsletterStudio.Plugins.Mailjet
                     batch[i].Successful = mailJetResult.Successful;
 
                     // Storing the "MessageId" as "ExternalId" for bounce reporting
-                    batch[i].ExternalId = mailJetResult.To.First().MessageId.ToString(); //TODO: Make sure this is the best to store.
-
-                    //TODO: Somewhere here we need to set the "Message Id".
-
+                    batch[i].ExternalId = mailJetResult.To.First().MessageId.ToString();
+                    
                     if (mailJetResult.Successful == false)
                     {
                         batch[i].ErrorMessage = string.Join(", ", mailJetResult.Errors.Select(x => x.ErrorMessage));
@@ -119,8 +110,6 @@ namespace NewsletterStudio.Plugins.Mailjet
             }
             else
             {
-                // API returned an error, setting all items in batch to error.
-
                 var error = response.GetData()[0].ToObject<MailJetMessageError>();
 
                 for (int i = 0; i < batch.Count; i++)
@@ -128,12 +117,7 @@ namespace NewsletterStudio.Plugins.Mailjet
                     batch[i].Successful = false;
                     batch[i].ErrorMessage = $"{error.ErrorMessage} ErrorCode: {error.ErrorCode}, ErrorRelatedTo: {string.Join(",",error.ErrorRelatedTo)}.";
                 }
-
-
             }
-            
-            
-            
 
         }
 
@@ -150,7 +134,6 @@ namespace NewsletterStudio.Plugins.Mailjet
                     }
                 },
                 {"Subject",batchItem.Message.Subject},
-                //{"TextPart", "Dear passenger 1, welcome to Mailjet! May the delivery force be with you!"},
                 {"HTMLPart", batchItem.Message.Body}
             };
             message.Add("CustomID",batchItem.WorkspaceKey.ToString());
@@ -177,9 +160,9 @@ namespace NewsletterStudio.Plugins.Mailjet
             foreach (var email in collection)
             {
                 arr.Add( new JObject {
-                            {"Email", email.Address},
-                            {"Name", email.DisplayName}
-                        });
+                    {"Email", email.Address},
+                    {"Name", email.DisplayName}
+                });
             }
 
             return arr;
@@ -203,53 +186,6 @@ namespace NewsletterStudio.Plugins.Mailjet
 
             return CommandResult.Error(new ValidationError("","",res.ErrorMessage));
 
-        }
-        
-    }
-
-    public class MailjetConfiguration
-    {
-        private readonly Dictionary<string, object> _settings;
-
-        public MailjetConfiguration(Dictionary<string,object> settings)
-        {
-            if (settings == null)
-                settings = new Dictionary<string, object>();
-
-            _settings = settings;
-        }
-
-        public string ApiKey
-        {
-            get
-            {
-                if (_settings.ContainsKey("mj_apiKey"))
-                    return _settings["mj_apiKey"].ToString();
-
-                return null;
-            }
-        }
-
-        public string ApiSecret
-        {
-            get
-            {
-                if (_settings.ContainsKey("mj_apiSecret"))
-                    return _settings["mj_apiSecret"].ToString();
-
-                return null;
-            }
-        }
-
-        public bool SandboxMode
-        {
-            get
-            {
-                if (_settings.ContainsKey("mj_sandboxMode"))
-                    return _settings["mj_sandboxMode"].ToString().Equals("true");
-
-                return false;
-            }
         }
         
     }
