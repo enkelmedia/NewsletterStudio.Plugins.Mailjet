@@ -6,9 +6,12 @@ param ($version = "13.0.0",$versionSuffix = "")
 . ".\functions.ps1" #Includes functions used in the script
 
 $versionFull = $version + $versionSuffix
+$packageId = "NewsletterStudio.Plugins.Mailjet"
 
 Write-Host "Version  :" $version
 Write-Host "VersionFull : " $versionFull
+
+cleanNuGetCache $packageId $versionFull
 
 setVersion ../src/NewsletterStudio.Plugins.Mailjet/NewsletterStudio.Plugins.Mailjet.csproj $version $versionSuffix
 

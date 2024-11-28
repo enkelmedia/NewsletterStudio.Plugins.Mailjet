@@ -58,3 +58,14 @@ Function exitIfNotSuccess()
         exit;
     }
 }
+
+Function cleanNuGetCache($packageId,$fullVersion) {
+
+    Write-Host "Cleaning NuGet-cache for package $packageId | $fullVersion"
+
+    $packageNuGetCacheFolder = "$($env:USERPROFILE)\.nuget\packages\$packageId\$fullVersion"
+    if(Test-Path $packageNuGetCacheFolder){
+        Remove-Item $packageNuGetCacheFolder -Recurse
+        WriteHost "Folder $packageNugetCacheFolder cleaned."
+    }
+}
