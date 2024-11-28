@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using NewsletterStudio.Core.Services;
+﻿using NewsletterStudio.Core.Services;
 using NewsletterStudio.Core.Public;
 using NewsletterStudio.Plugins.Mailjet.Dtos;
 using NewsletterStudio.Plugins.Mailjet.Webhook.Models;
 using Newtonsoft.Json;
-
-#if NETFRAMEWORK
-using System.Web.Mvc;
-using Umbraco.Core.Cache;
-using Umbraco.Web.Mvc;
-#else
 using Umbraco.Extensions;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Logging;
@@ -22,7 +12,6 @@ using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Web.Website.Controllers;
-#endif
 
 namespace NewsletterStudio.Plugins.Mailjet.Webhook
 {
@@ -32,18 +21,7 @@ namespace NewsletterStudio.Plugins.Mailjet.Webhook
         private readonly INewsletterStudioService _newsletterStudioService;
         private readonly AppCaches _appCaches;
 
-#if NETFRAMEWORK
-        public MailjetWebhookController(
-        IBounceOperationsService bounceOperationsService,
-        INewsletterStudioService newsletterStudioService,
-        AppCaches appCaches
-        )
-        {
-            _bounceOperationsService = bounceOperationsService;
-            _newsletterStudioService = newsletterStudioService;
-            _appCaches = appCaches;
-        }
-#else
+
         public MailjetWebhookController(
             IUmbracoContextAccessor umbracoContextAccessor,
             IUmbracoDatabaseFactory databaseFactory,
@@ -58,28 +36,9 @@ namespace NewsletterStudio.Plugins.Mailjet.Webhook
             _bounceOperationsService = bounceOperationsService;
             _newsletterStudioService = newsletterStudioService;
         }
-#endif
 
         /// umbraco/surface/MailjetWebhook/Handle
-#if NETFRAMEWORK
-        [HttpPost]        
-        public ActionResult Handle(string secret)
-        {
-            Stream req = Request.InputStream;
-            req.Seek(0, System.IO.SeekOrigin.Begin);
-            string body = new StreamReader(req).ReadToEnd();
 
-            var res = Do_Handle(secret,body);
-
-            if(res.Success)
-                return Content("Done");
-
-
-            Response.StatusCode = 400;
-            return Content(res.Message);
-
-        }
-#else
         [HttpPost]
         public IActionResult Handle(string secret)
         {
@@ -94,9 +53,6 @@ namespace NewsletterStudio.Plugins.Mailjet.Webhook
             Response.StatusCode = 400;
             return Content(res.Message);
         }
-#endif
-
-
         private DoHandleResponse Do_Handle(string secret, string body)
         {
             if (string.IsNullOrEmpty(secret))

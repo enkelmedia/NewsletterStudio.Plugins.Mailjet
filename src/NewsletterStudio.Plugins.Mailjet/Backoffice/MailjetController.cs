@@ -6,21 +6,12 @@ using Mailjet.Client;
 using NewsletterStudio.Core;
 using NewsletterStudio.Plugins.Mailjet.Backoffice.Models;
 using NewsletterStudio.Plugins.Mailjet.Dtos;
-
-
-#if NETFRAMEWORK
-using System.Web.Http;
-using Umbraco.Core;
-using Umbraco.Web.Editors;
-using Umbraco.Web.Mvc;
-using Umbraco.Web.WebApi;
-#else
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Cms.Web.BackOffice.Controllers; 
 using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.BackOffice.Filters;
 using Umbraco.Extensions;
-#endif
+
 
 namespace NewsletterStudio.Plugins.Mailjet.Backoffice 
 {
@@ -29,13 +20,8 @@ namespace NewsletterStudio.Plugins.Mailjet.Backoffice
     public class MailjetController : UmbracoAuthorizedJsonController 
     {
 
-#if NETFRAMEWORK
-        [HttpPost]
-        public IHttpActionResult GetConfiguration(CheckWebhookConfigurationRequest req)
-#else
         [HttpPost] 
         public IActionResult GetConfiguration(CheckWebhookConfigurationRequest req)
-#endif
         {
             var mailjetConfiguration = new MailjetConfiguration(req.Settings);
 
@@ -46,13 +32,9 @@ namespace NewsletterStudio.Plugins.Mailjet.Backoffice
             return Ok(res);
         }
 
-#if NETFRAMEWORK
-        [HttpPost]
-        public IHttpActionResult ConfigureNow(CheckWebhookConfigurationRequest req)
-#else
+
         [HttpPost]
         public IActionResult ConfigureNow(CheckWebhookConfigurationRequest req)
-#endif
         {
             var configuration = new MailjetConfiguration(req.Settings);
 

@@ -1,7 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net50</TargetFrameworks>
+	  <TargetFramework>net8.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	  <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+	  <ContentTargetFolders>.</ContentTargetFolders>
   </PropertyGroup>
 
 	<!-- NuGet package info -->
@@ -18,66 +23,35 @@
 		<Description>Plugin for Newsletter Studio to send emails via the Mailjet API.</Description>
 		<PackageReleaseNotes></PackageReleaseNotes>
 
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>false</IncludeSymbols>
 
 		<ContentTargetFolders>content</ContentTargetFolders>
 		<PackageIcon>icon.png</PackageIcon>
 
-		<Version>1.0.0</Version>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<PackageVersion>1.0.0-beta1</PackageVersion>
-		<InformationalVersion>1.0.0</InformationalVersion>
+		<Version>13.0.0</Version>
+		<AssemblyVersion>13.0.0</AssemblyVersion>
+		<PackageVersion>13.0.0</PackageVersion>
+		<InformationalVersion>13.0.0</InformationalVersion>
 		<Authors>Enkel Media Stockholm AB</Authors>
 		<Copyright>Enkel Media Stockholm AB</Copyright>
 		
 	</PropertyGroup>
 
-	<!-- Package files -->
-	<ItemGroup>
-		<Content Include="content\App_Plugins\**\*.*">
-			<PackagePath>content\App_Plugins</PackagePath>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-		<!-- Target file to copy App_Plugins in net50 -->
-		<None Include="build\**\*.*">
-			<Pack>True</Pack>
-			<PackagePath>buildTransitive</PackagePath>
-		</None>
-		<None Remove="content\App_Plugins\NewsletterStudio.Plugins.Mailjet\mailjet.settings.controller.js" />
-		<None Remove="content\App_Plugins\NewsletterStudio.Plugins.Mailjet\package.manifest" />
-		<None Include="build\icon.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="Mailjet.Api" Version="1.2.2" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-		<Reference Include="System.Web" />
-		<PackageReference Include="UmbracoCms.Web" Version="8.1.0" IncludeAssets="compile" />
-		<PackageReference Include="NewsletterStudio.Core" Version="3.0.0" IncludeAssets="compile" />
-		<PackageReference Include="NewsletterStudio.Web" Version="3.0.0" IncludeAssets="compile" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net50'">
-		<PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.1" />
-		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.1" />
-		<PackageReference Include="NewsletterStudio.Core" Version="4.0.0" IncludeAssets="compile" />
-		<PackageReference Include="NewsletterStudio.Web" Version="4.0.0" IncludeAssets="compile" />
-	</ItemGroup>
-
 	<ItemGroup>
-	  <Folder Include="AppStart\" />
-	  <Folder Include="Backoffice\Models\" />
-	  <Folder Include="Webhook\Models\" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="[13.0.0,14.0.0]" />
+		<PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="[13.0.0,14.0.0]" />
+		<PackageReference Include="NewsletterStudio.Core" Version="13.0.0" IncludeAssets="compile" />
+		<PackageReference Include="NewsletterStudio.Web" Version="13.0.0" IncludeAssets="compile" />
 	</ItemGroup>
 
-	<Target Name="RemoveLuceneAnalyzer" BeforeTargets="CoreCompile">
+	<!--<Target Name="RemoveLuceneAnalyzer" BeforeTargets="CoreCompile">
 		<ItemGroup>
 			<Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Lucene.Net.CodeAnalysis.CSharp'" />
 		</ItemGroup>
-	</Target>
+	</Target>-->
 
 </Project>
