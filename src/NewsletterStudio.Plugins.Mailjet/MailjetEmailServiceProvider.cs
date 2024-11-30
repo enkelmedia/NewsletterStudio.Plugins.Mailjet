@@ -1,3 +1,4 @@
+using System.Text;
 using Mailjet.Client;
 using Microsoft.Extensions.Logging;
 using NewsletterStudio.Core.Models;
@@ -43,10 +44,10 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
         var errors = new ErrorCollection();
 
         if (string.IsNullOrEmpty(configuration.ApiKey))
-            errors.Add(new ValidationError(Constants.Settings.ApiKeyPropertyName, "ns_validationRequired")); //TODO: Use ValidationErrors.GenericRequired
+            errors.Add(new ValidationError(Constants.Settings.ApiKeyPropertyName, ValidationErrors.GenericRequired));
 
         if (string.IsNullOrEmpty(configuration.ApiSecret))
-            errors.Add(new ValidationError(Constants.Settings.SecretPropertyName, "ns_validationRequired")); //TODO: Use ValidationErrors.GenericRequired
+            errors.Add(new ValidationError(Constants.Settings.SecretPropertyName, ValidationErrors.GenericRequired));
 
         return errors;
 
@@ -88,40 +89,51 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
         // request just before the message(s) are passed over to MailJet.
         await _eventAggregator.PublishAsync(new EmailSendingNotification(request)).ConfigureAwait(false);
 
-        MailjetResponse response = await client.PostAsync(request).ConfigureAwait(false);
+        // The response will contain an array in the same order as we sent them to the API.
+        // EACH item in the array have a "Status" ("success" or "error")
+        // Good to know: mailjetResponseData.IsSuccessStatusCode will be true if ALL messages
+        // was sent successfully, if any message failed, it will be false.
+        // Details: https://dev.mailjet.com/email/guides/webhooks/#event-types
 
-        if (response.IsSuccessStatusCode)
+        MailjetResponse? response = null;
+
+        try
         {
-            var data = response.GetData();
+            response = await client.PostAsync(request).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            SetBatchAsFailed(batch,e);
+            return;
+        }
+
+        try
+        {
+            var mailjetResponseData = response.GetData();
 
             for (int i = 0; i < batch.Count; i++)
             {
-                var mailJetResult = data[i].ToObject<MailJetMessageResponse>();
+                var mailjetResult = mailjetResponseData[i].ToObject<MailJetMessageResponse>();
 
-                if (mailJetResult == null)
+                if (mailjetResult == null)
                     throw new ArgumentException("No MailJet-result for message");
 
-                batch[i].Successful = mailJetResult.Successful;
+                batch[i].Successful = mailjetResult.Successful;
 
-                // Storing the "MessageId" as "ExternalId" for bounce reporting
-                batch[i].ExternalId = mailJetResult.To.First().MessageId.ToString();
-
-                if (mailJetResult.Successful == false)
+                if (mailjetResult.Successful)
                 {
-                    batch[i].ErrorMessage = string.Join(", ", mailJetResult.Errors.Select(x => x.ErrorMessage));
+                    batch[i].ExternalId = mailjetResult.To.First().MessageId.ToString();
                 }
-
+                else
+                {
+                    batch[i].ErrorMessage = this.ErrorsAsString(mailjetResult.Errors);
+                }
             }
+
         }
-        else
+        catch (Exception e)
         {
-            var error = response.GetData()[0].ToObject<MailJetMessageError>();
-
-            for (int i = 0; i < batch.Count; i++)
-            {
-                batch[i].Successful = false;
-                batch[i].ErrorMessage = $"{error.ErrorMessage} ErrorCode: {error.ErrorCode}, ErrorRelatedTo: {string.Join(",", error.ErrorRelatedTo)}.";
-            }
+            SetBatchAsFailed(batch,e,response);
         }
 
     }
@@ -143,7 +155,28 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
 
     }
 
+    private string ErrorsAsString(List<MailJetMessageError> errors)
+    {
+        StringBuilder sb = new StringBuilder();
 
+        foreach (var error in errors)
+        {
+            sb.Append($"{error.ErrorMessage} ErrorCode: {error.ErrorCode}, ErrorRelatedTo: {string.Join(",", error.ErrorRelatedTo ?? [])}. Identifier: {error.ErrorIdentifier}");
+        }
+
+        return sb.ToString();
+    }
+
+    private void SetBatchAsFailed(List<SendEmailJob> batch,Exception e, MailjetResponse? mailjetResponse = null)
+    {
+        _logger.LogError(e,"NewsletterStudio: Critical error in Mailjet-batch. All items in batch was reported as unsuccessful. Mailjet response: {MailjetResponse}", mailjetResponse);
+
+        foreach (var item in batch)
+        {
+            item.Successful = false;
+            item.ErrorMessage = $"Critical error/exception. {e.Message}. See Trace Log for more details.";
+        }
+    }
 
     private JToken MailjetMessageFromBatchJOb(SendEmailJob batchItem)
     {
@@ -151,13 +184,15 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
         var message = new JObject
         {
             {
-                "From",
-                new JObject {{"Email", batchItem.Message.From.Email}, {"Name", batchItem.Message.From.DisplayName}}
+                "From", new JObject {{"Email", batchItem.Message.From.Email}, {"Name", batchItem.Message.From.DisplayName}}
             },
             {"Subject", batchItem.Message.Subject},
             {"HTMLPart", batchItem.Message.HtmlBody}
         };
+
+        // Using WorkspaceKey as CustomID so that webhook-handler can know if needed.
         message.Add("CustomID", batchItem.WorkspaceKey.ToString());
+
         message.Add("To", RecipientsToJArray(batchItem.Message.To));
 
         if (batchItem.Message.Cc.Any())
