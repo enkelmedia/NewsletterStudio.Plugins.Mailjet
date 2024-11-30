@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Rewrite;
+using UmbracoTestSite.Routing;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.CreateUmbracoBuilder()
     .AddBackOffice()
     .AddWebsite()
-    .AddDeliveryApi()
     .AddComposers()
     .Build();
 
@@ -11,6 +13,8 @@ WebApplication app = builder.Build();
 
 await app.BootUmbracoAsync();
 
+// Use proxy host rewrite to allow running through DevTunnels
+app.UseProxyHostRewrite();
 
 app.UseUmbraco()
     .WithMiddleware(u =>
@@ -20,7 +24,6 @@ app.UseUmbraco()
     })
     .WithEndpoints(u =>
     {
-        u.UseInstallerEndpoints();
         u.UseBackOfficeEndpoints();
         u.UseWebsiteEndpoints();
     });

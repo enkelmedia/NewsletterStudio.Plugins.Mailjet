@@ -69,3 +69,53 @@ Function cleanNuGetCache($packageId,$fullVersion) {
         WriteHost "Folder $packageNugetCacheFolder cleaned."
     }
 }
+
+function Update-UmbracoPackageJsonFile {
+    param (
+        [string]$JsonFilePath,
+        [string]$NewVersion
+    )
+
+    Write-Host "Setting package json version" $NewVersion
+
+    try {
+        # Read the JSON content from the file
+        $jsonContent = Get-Content -Path $JsonFilePath | ConvertFrom-Json
+
+        # Update the "version" value
+        $jsonContent.version = $NewVersion
+
+        # Update the URL in the "js" property of the first element in the "extensions" array
+        if ($jsonContent.extensions.Count -gt 0) {
+
+            $currentValue = $jsonContent.extensions[0].js
+
+            Write-Host "Cur Value " $currentValue
+
+            # Define the regex pattern to match the URL with the version
+            $pattern = "(.js\?v).*"
+
+            $versionUrlSafe = $NewVersion -replace '\.' -replace '-'
+
+            Write-Host "UrlSafe" $versionUrlSafe
+
+            # Replace the matched version number with the new version
+            $updatedContent = $currentValue -replace $pattern,('.js?v'+ $versionUrlSafe)
+
+            Write-Host "New Value " $updatedContent
+
+            $jsonContent.extensions[0].js = $updatedContent
+        }
+
+        # Convert the updated JSON content back to a string
+        $updatedJsonContent = $jsonContent | ConvertTo-Json -Depth 100
+
+        # Write the updated JSON content back to the file
+
+        Set-Content -Path $JsonFilePath -Value $updatedJsonContent
+
+        Write-Output "JSON file '$JsonFilePath' updated successfully."
+    } catch {
+        Write-Error "An error occurred: $_"
+    }
+}
