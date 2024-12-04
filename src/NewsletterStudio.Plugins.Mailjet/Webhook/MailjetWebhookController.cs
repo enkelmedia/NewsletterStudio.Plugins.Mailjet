@@ -7,8 +7,6 @@ using Umbraco.Extensions;
 using Umbraco.Cms.Core.Cache;
 using Microsoft.AspNetCore.Mvc;
 using NewsletterStudio.Core;
-using NewsletterStudio.Core.Frontend.Common.FrontendModels;
-using Umbraco.Cms.Infrastructure.Migrations.Upgrade.V_13_5_0;
 
 namespace NewsletterStudio.Plugins.Mailjet.Webhook;
 
@@ -61,8 +59,6 @@ public class MailjetWebhookController : Controller
             string errorMessage = HandleAndExtractErrorMessage(mjEvent);
 
             _bounceOperationsService.SetTrackingItemError(externalId, errorMessage);
-
-            //TODO: Consider if it makes sense to ues _bounceOperationsService.SetRecipientPermanentError() for any errors.
         }
 
         return new DoHandleResponse()
@@ -83,7 +79,6 @@ public class MailjetWebhookController : Controller
 
     private string HandleAndExtractErrorMessage(MailJetWebhookEvent mjEvent)
     {
-        
         StringBuilder sb = new StringBuilder();
 
         if (mjEvent.Event.Equals("spam"))
@@ -99,31 +94,18 @@ public class MailjetWebhookController : Controller
 
             if (mjEvent.HardBounce.HasValue && mjEvent.HardBounce.Value)
             {
-                SetRecipientAsPermanentError(mjEvent);
+                SetRecipientAsPermanentError(mjEvent,sb.ToString());
             }
         }
-
-        
-
-        
 
         return sb.ToString();
     }
 
-    public void SetRecipientAsPermanentError(MailJetWebhookEvent mjEvent)
+    public void SetRecipientAsPermanentError(MailJetWebhookEvent mjEvent,string errorMessage)
     {
-
-        bool hasWorkspaceKey = Guid.TryParse(mjEvent.CustomId, out Guid workspaceKey);
-        if (hasWorkspaceKey)
-        {
-            _bounceOperationsService.SetRecipientPermanentError(mjEvent.Email,workspaceKey);
-        }
-        else
-        {
-            //TODO: When #3960 has been fixed we should use message id OR fallback to setting error for all recipients
-            //      with the same email in all workspaces.
-        }
-
+        //NOTE: There are currently no way to pass a message to explain why a recipient
+        //      was set as permanent error so we can't pass anything.
+        _bounceOperationsService.SetRecipientPermanentError(mjEvent.MessageId.ToString());
     }
         
 }

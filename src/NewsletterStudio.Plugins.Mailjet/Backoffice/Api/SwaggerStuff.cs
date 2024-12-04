@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using NewsletterStudio.Web.Controllers.Api;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Umbraco.Cms.Api.Common.OpenApi;
 using Umbraco.Cms.Api.Management.OpenApi;
@@ -30,7 +29,7 @@ internal class NewsletterStudioPluginSchemaIdHandler : SchemaIdHandler
     }
 }
 
-public class NewsletterStudioPluginOperationIdHandler : OperationIdHandler
+internal class NewsletterStudioPluginOperationIdHandler : OperationIdHandler
 {
     public NewsletterStudioPluginOperationIdHandler(IOptions<ApiVersioningOptions> apiVersioningOptions) : base(apiVersioningOptions)
     {
@@ -51,7 +50,7 @@ public class NewsletterStudioPluginOperationIdHandler : OperationIdHandler
 }
 
 
-public class ConfigureNewsletterStudioPluginApiSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
+internal class ConfigureNewsletterStudioPluginApiSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
     public void Configure(SwaggerGenOptions swaggerGenOptions)
     {
@@ -64,36 +63,14 @@ public class ConfigureNewsletterStudioPluginApiSwaggerGenOptions : IConfigureOpt
                 Description = $"Backoffice API for Newsletter Studio Plugin, for our internal use contracts might break at any time."
             });
 
-        //swaggerGenOptions.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Constants.PackageId}.xml"));
+        
+        swaggerGenOptions.OperationFilter<ApiOperationSecurityFilter>();
 
-        //swaggerGenOptions.CustomOperationIds(e =>
-        //{
-        //    if (e.ActionDescriptor is ControllerActionDescriptor ctrlActionDescriptor)
-        //    {
-        //        return $"{ctrlActionDescriptor.ControllerName}{ctrlActionDescriptor.RouteValues["action"]}";
-        //    }
-
-        //    return $"{e.ActionDescriptor.RouteValues["action"]}";
-
-        //});
-
-        swaggerGenOptions.OperationFilter<MyItemApiOperationSecurityFilter>();
-
-        //swaggerGenOptions.CustomOperationIds(e =>
-        //{
-        //    if (e.ActionDescriptor is ControllerActionDescriptor ctrlActionDescriptor)
-        //    {
-        //        return $"{ctrlActionDescriptor.ControllerName}{ctrlActionDescriptor.RouteValues["action"]}";
-        //    }
-
-        //    return $"{e.ActionDescriptor.RouteValues["action"]}";
-
-        //});
-
+        
     }
 }
 
-public class MyItemApiOperationSecurityFilter : BackOfficeSecurityRequirementsOperationFilterBase
+internal class ApiOperationSecurityFilter : BackOfficeSecurityRequirementsOperationFilterBase
 {
     protected override string ApiName => NewsletterStudioPluginApiConfiguration.ApiName;
 }
