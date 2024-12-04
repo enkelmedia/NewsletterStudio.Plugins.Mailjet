@@ -18,7 +18,7 @@ public static class NewsletterStudioPluginApiConfiguration
     public const string ApiTitle = "Newsletter Studio Plugin";
 }
 
-internal class TheDashboardSchemaIdHandler : SchemaIdHandler
+internal class NewsletterStudioPluginSchemaIdHandler : SchemaIdHandler
 {
     public override bool CanHandle(Type type)
     {
@@ -28,17 +28,11 @@ internal class TheDashboardSchemaIdHandler : SchemaIdHandler
         return false;
 
     }
-
-    public override string Handle(Type type)
-    {
-        var res = UmbracoSchemaId(type);
-        return res;
-    }
 }
 
-public class FooOperationHandler : OperationIdHandler
+public class NewsletterStudioPluginOperationIdHandler : OperationIdHandler
 {
-    public FooOperationHandler(IOptions<ApiVersioningOptions> apiVersioningOptions) : base(apiVersioningOptions)
+    public NewsletterStudioPluginOperationIdHandler(IOptions<ApiVersioningOptions> apiVersioningOptions) : base(apiVersioningOptions)
     {
     }
 

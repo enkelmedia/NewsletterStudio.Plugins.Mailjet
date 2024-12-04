@@ -24,14 +24,10 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
   #workspaceContext? : NsAdministrationWorkspaceContext;
 
   @state()
-  //workspaceEditModel? : WorkspaceManageValueFrontendModel;
-
-  @state()
   configuration? : GetConfigurationResponse;
 
   @state()
   workspaceKey? : string;
-
 
   _baseUrl? : string;
 
@@ -48,40 +44,24 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
 
     this.consumeContext(NS_ADMINISTRATION_WORKSPACE_CONTEXT,(instance) => {
       this.#workspaceContext = instance;
-      console.log('ctx',instance);
-      //debugger;
 
+      // Listening for changes for baseUrl using a debounce to avoid having to
+      // load config from server to often.
       this.debouncedBaseUrlChange = this.#workspaceContext.model.pipe(debounceTime(500));
 
       this.observe(this.#workspaceContext.model, (model) => {
-
         this._baseUrl = model.baseUrl;
-        console.log('base url',this._baseUrl);
       });
 
       this.observe(this.debouncedBaseUrlChange, async ()=>{
         await this.#loadConfigurationFromServer();
-        console.log('Value changed!!!!');
-        // trigger reload of configuration from server.
       });
 
-      var res = this.#workspaceContext.getWorkspaceKey();
-      console.log('res workspace key',res);
-
       this.observe(this.#workspaceContext.workspaceKey,(workspaceKey) => {
-        console.log('workspace key',workspaceKey);
         this.workspaceKey = workspaceKey;
-        console.log('res workspace key', this.#workspaceContext!.getWorkspaceKey());
       });
 
     });
-
-  }
-
-  async connectedCallback() {
-    super.connectedCallback();
-
-    await this.#loadConfigurationFromServer();
 
   }
 
@@ -121,7 +101,6 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
   renderSettings(settings : MailjetProviderSettings) {
 
     return html`
-      <ns-validation-errors-debug></ns-validation-errors-debug>
       <ns-property
         label="ns_mailjet_apiKey"
         description="ns_mailjet_apiKeyDescription" required>
@@ -178,7 +157,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
               Login to Mailjet and go to settings, click on Event notifications (webhook) (<a href="https://app.mailjet.com/account/triggers" target="_blank">link</a>).<br />
               Enter the following URL for the Bounce, Spam and Blocked-events:
           </p>
-          <pre>{{pVm.data.webhookUrl}}</pre>
+          <pre>${this.configuration?.webhookUrl}</pre>
         `)
       }
 
@@ -215,7 +194,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
     }
 
     pre {
-      font-size:10px;
+      font-size:12px;
       background:#f5f5f5;
       border:1px solid #b8b8b8;
       padding:5px;

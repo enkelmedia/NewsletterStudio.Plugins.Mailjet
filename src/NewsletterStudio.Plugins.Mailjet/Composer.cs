@@ -16,8 +16,8 @@ public class Composer : IComposer
 #if DEBUG
         //// SWAGGER - Only use in debug build to avoid exposing in production messing up things in the core.
         builder.Services.ConfigureOptions<ConfigureNewsletterStudioPluginApiSwaggerGenOptions>();
-        builder.Services.AddSingleton<ISchemaIdHandler, TheDashboardSchemaIdHandler>();
-        builder.Services.AddSingleton<IOperationIdHandler, FooOperationHandler>();
+        builder.Services.AddSingleton<ISchemaIdHandler, NewsletterStudioPluginSchemaIdHandler>();
+        builder.Services.AddSingleton<IOperationIdHandler, NewsletterStudioPluginOperationIdHandler>();
 #endif
     }
 }
