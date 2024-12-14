@@ -31,7 +31,7 @@ public class MailjetController : ManagementApiControllerBase
     /// </summary>
     /// <param name="req"></param>
     /// <returns></returns>
-    [HttpPost("get-configuration",Name="Sven")]
+    [HttpPost("get-configuration")]
     [ProducesResponseType(typeof(CheckWebhookConfigurationResponse), StatusCodes.Status200OK)]
     public IActionResult GetConfiguration(CheckWebhookConfigurationRequest req)
     {
@@ -47,7 +47,7 @@ public class MailjetController : ManagementApiControllerBase
     }
 
 
-    [HttpPost("configure-now", Name = "Kalle")]
+    [HttpPost("configure-now")]
     [ProducesResponseType(typeof(CheckWebhookConfigurationResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> ConfigureNow(CheckWebhookConfigurationRequest req)
     {

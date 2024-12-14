@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.48.3",
-    "@newsletterstudio/umbraco": "./newsletterstudio-umbraco-14.0.0-rc1.tgz",
+    "@newsletterstudio/umbraco": "^14.0.0",
     "@umbraco-cms/backoffice": "^14.3.0",
     "lit": "^3.2.0",
     "typescript": "^5.6.3",
