@@ -19,6 +19,11 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+
+    "types" : [
+      "@umbraco-cms/backoffice/extension-types",
+      "@newsletterstudio/umbraco/extension-types"
+    ]
   },
   "include": ["src"]
 }
