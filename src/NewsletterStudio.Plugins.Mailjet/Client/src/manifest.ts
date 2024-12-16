@@ -1,5 +1,5 @@
 import { ManifestEmailServiceProviderSettingsUi } from "@newsletterstudio/umbraco/extensibility";
-import type { ManifestLocalization, UmbBackofficeExtensionRegistry } from "@umbraco-cms/backoffice/extension-registry";
+import type { UmbBackofficeExtensionRegistry } from "@umbraco-cms/backoffice/extension-registry";
 
 const smtpMailjetUi : ManifestEmailServiceProviderSettingsUi = {
   type: "nsEmailServiceProviderSettingsUi",
@@ -11,7 +11,7 @@ const smtpMailjetUi : ManifestEmailServiceProviderSettingsUi = {
   }
 };
 
-const translationManifests : Array<ManifestLocalization> = [
+const translationManifests : Array<UmbExtensionManifest> = [
 	{
 		type: "localization",
 		alias: "UmbNs.Localize.EnUS",
