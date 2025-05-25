@@ -13,15 +13,13 @@ export type CheckWebhookConfigurationResponseModel = {
     isBaseUrlLocalhost: boolean;
 };
 
-export type EventMessageTypeModel = 'Default' | 'Info' | 'Error' | 'Success' | 'Warning';
-
-export const EventMessageTypeModel = {
-    DEFAULT: 'Default',
-    INFO: 'Info',
-    ERROR: 'Error',
-    SUCCESS: 'Success',
-    WARNING: 'Warning'
-} as const;
+export enum EventMessageTypeModel {
+    DEFAULT = 'Default',
+    INFO = 'Info',
+    ERROR = 'Error',
+    SUCCESS = 'Success',
+    WARNING = 'Warning'
+}
 
 export type NotificationHeaderModel = {
     message: string;
@@ -30,46 +28,51 @@ export type NotificationHeaderModel = {
 };
 
 export type ConfigureNowData = {
-    requestBody?: CheckWebhookConfigurationRequestModel;
+    body?: CheckWebhookConfigurationRequestModel;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/newsletter-studio-mailjet/configure-now';
 };
 
-export type ConfigureNowResponse = CheckWebhookConfigurationResponseModel;
+export type ConfigureNowErrors = {
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+};
+
+export type ConfigureNowResponses = {
+    /**
+     * OK
+     */
+    200: CheckWebhookConfigurationResponseModel;
+};
+
+export type ConfigureNowResponse = ConfigureNowResponses[keyof ConfigureNowResponses];
 
 export type GetConfigurationData = {
-    requestBody?: CheckWebhookConfigurationRequestModel;
+    body?: CheckWebhookConfigurationRequestModel;
+    path?: never;
+    query?: never;
+    url: '/umbraco/management/api/newsletter-studio-mailjet/get-configuration';
 };
 
-export type GetConfigurationResponse = CheckWebhookConfigurationResponseModel;
+export type GetConfigurationErrors = {
+    /**
+     * The resource is protected and requires an authentication token
+     */
+    401: unknown;
+};
 
-export type $OpenApiTs = {
-    '/umbraco/management/api/newsletter-studio-mailjet/configure-now': {
-        post: {
-            req: ConfigureNowData;
-            res: {
-                /**
-                 * OK
-                 */
-                200: CheckWebhookConfigurationResponseModel;
-                /**
-                 * The resource is protected and requires an authentication token
-                 */
-                401: unknown;
-            };
-        };
-    };
-    '/umbraco/management/api/newsletter-studio-mailjet/get-configuration': {
-        post: {
-            req: GetConfigurationData;
-            res: {
-                /**
-                 * OK
-                 */
-                200: CheckWebhookConfigurationResponseModel;
-                /**
-                 * The resource is protected and requires an authentication token
-                 */
-                401: unknown;
-            };
-        };
-    };
+export type GetConfigurationResponses = {
+    /**
+     * OK
+     */
+    200: CheckWebhookConfigurationResponseModel;
+};
+
+export type GetConfigurationResponse = GetConfigurationResponses[keyof GetConfigurationResponses];
+
+export type ClientOptions = {
+    baseUrl: 'http://localhost:54108' | (string & {});
 };

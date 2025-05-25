@@ -14,7 +14,7 @@ const smtpMailjetUi : ManifestEmailServiceProviderSettingsUi = {
 const translationManifests : Array<UmbExtensionManifest> = [
 	{
 		type: "localization",
-		alias: "UmbNs.Localize.EnUS",
+    alias: "Ns.Plugin.Mailjet.Localize.EnUS",
 		name: "English (United States)",
 		meta: {
 			"culture": "en-us"

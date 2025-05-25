@@ -1,7 +1,7 @@
 {
   "name": "ns-plugin",
   "private": true,
-  "version": "15.0.0",
+  "version": "16.0.0",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build --emptyOutDir",
@@ -10,11 +10,12 @@
     "generate:api": "openapi-ts"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.48.3",
-    "@newsletterstudio/umbraco": "^15.0.0",
-    "@umbraco-cms/backoffice": "^15.0.0",
-    "lit": "^3.2.0",
-    "typescript": "^5.6.3",
-    "vite": "^5.2.0"
+    "@hey-api/client-fetch": "^0.10.1",
+    "@hey-api/openapi-ts": "^0.67.6",
+    "@newsletterstudio/umbraco": "file:../../../../../../Arkiv/Releases/newsletterstudio-umbraco-16.0.0-rc1.tgz",
+    "@umbraco-cms/backoffice": "^16.0.0-rc3",
+    "lit": "^3.3.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
   }
 }

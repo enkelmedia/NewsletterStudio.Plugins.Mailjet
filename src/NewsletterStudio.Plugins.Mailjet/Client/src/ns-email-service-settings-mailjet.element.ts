@@ -1,17 +1,16 @@
 import type { NsCheckboxElement } from '@newsletterstudio/umbraco/components';
 import { tryExecute, tryExecuteAndNotify } from '@umbraco-cms/backoffice/resources';
 import { UmbTextStyles } from '@umbraco-cms/backoffice/style';
-import type { UUIButtonState } from '@umbraco-ui/uui';
 import type { UmbNotificationContext } from "@umbraco-cms/backoffice/notification";
 import { UMB_NOTIFICATION_CONTEXT } from "@umbraco-cms/backoffice/notification";
-import { nsBindToValidation } from '@newsletterstudio/umbraco/forms';
 import { css, html, customElement, when, state, unsafeHTML } from '@newsletterstudio/umbraco/lit';
 import { NsEmailServiceProviderUiBase } from '@newsletterstudio/umbraco/extensibility';
-import { WorkspaceManageOverviewResponseFrontendModel, WorkspaceManageValueFrontendModel, WorkspaceResource } from '@newsletterstudio/umbraco/backend';
-import { GetConfigurationData, GetConfigurationResponse, MailjetResource } from './backend-api';
-import {NS_ADMINISTRATION_WORKSPACE_CONTEXT, NsAdministrationWorkspaceContext} from '@newsletterstudio/umbraco/administration';
+import { WorkspaceManageValueFrontendModel } from '@newsletterstudio/umbraco/backend';
+import { GetConfigurationResponse, MailjetResource } from './backend-api';
+import { NS_ADMINISTRATION_WORKSPACE_CONTEXT, NsAdministrationWorkspaceContext } from '@newsletterstudio/umbraco/administration';
 import { notifySuccess } from '@newsletterstudio/umbraco/core';
 import { debounceTime, Observable } from '@umbraco-cms/backoffice/external/rxjs';
+import { umbBindToValidation } from '@umbraco-cms/backoffice/validation';
 
 /**
 * ns-email-service-settings-mailjet
@@ -47,17 +46,17 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
 
       // Listening for changes for baseUrl using a debounce to avoid having to
       // load config from server to often.
-      this.debouncedBaseUrlChange = this.#workspaceContext.model.pipe(debounceTime(500));
+      this.debouncedBaseUrlChange = this.#workspaceContext?.model.pipe(debounceTime(500));
 
-      this.observe(this.#workspaceContext.model, (model) => {
-        this._baseUrl = model.baseUrl;
+      this.observe(this.#workspaceContext?.model, (model) => {
+        this._baseUrl = model?.baseUrl;
       });
 
       this.observe(this.debouncedBaseUrlChange, async ()=>{
         await this.#loadConfigurationFromServer();
       });
 
-      this.observe(this.#workspaceContext.workspaceKey,(workspaceKey) => {
+      this.observe(this.#workspaceContext?.workspaceKey,(workspaceKey) => {
         this.workspaceKey = workspaceKey;
       });
 
@@ -67,8 +66,8 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
 
   async #loadConfigurationFromServer(){
 
-    var configurationResult = await tryExecuteAndNotify(this,MailjetResource.getConfiguration({
-      requestBody : this.#mapSettingsToModel()
+    var configurationResult = await tryExecute(this,MailjetResource.getConfiguration({
+      body : this.#mapSettingsToModel()
     }));
 
     if(!configurationResult.error){
@@ -89,7 +88,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
   async #handleConfigureNow(){
 
     var configurationResult = await tryExecuteAndNotify(this,MailjetResource.configureNow({
-      requestBody : this.#mapSettingsToModel()
+      body : this.#mapSettingsToModel()
     }));
 
     if(!configurationResult.error){
@@ -110,7 +109,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
                       name="host"
                       @change=${(e:Event)=>this.updateValueFromEvent('mj_apiKey',e)}
                       label=${this.localize.term('ns_mailjet_apiKey')}
-                      ${nsBindToValidation(this,'$.mj_apiKey',settings.mj_apiKey)}
+                      ${umbBindToValidation(this,'$.mj_apiKey',settings.mj_apiKey)}
                       required></uui-input>
         </uui-form-layout-item>
       </ns-property>
@@ -123,7 +122,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
                       name="host"
                       @change=${(e:Event)=>this.updateValueFromEvent('mj_apiSecret',e)}
                       label=${this.localize.term('ns_mailjet_apiSecret')}
-                      ${nsBindToValidation(this,'$.mj_apiSecret',settings.mj_apiSecret)}
+                      ${umbBindToValidation(this,'$.mj_apiSecret',settings.mj_apiSecret)}
                       required></uui-input>
         </uui-form-layout-item>
       </ns-property>
