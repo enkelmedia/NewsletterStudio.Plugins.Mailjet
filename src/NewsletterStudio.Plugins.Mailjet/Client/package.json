@@ -12,8 +12,8 @@
   "devDependencies": {
     "@hey-api/client-fetch": "^0.10.1",
     "@hey-api/openapi-ts": "^0.67.6",
-    "@newsletterstudio/umbraco": "file:../../../../../../Arkiv/Releases/newsletterstudio-umbraco-16.0.0-rc1.tgz",
-    "@umbraco-cms/backoffice": "^16.0.0-rc3",
+    "@newsletterstudio/umbraco": "^16.0.0",
+    "@umbraco-cms/backoffice": "^16.0.0",
     "lit": "^3.3.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"

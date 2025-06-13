@@ -6,6 +6,8 @@ using Umbraco.Extensions;
 using Microsoft.AspNetCore.Http;
 using Umbraco.Cms.Api.Common.Attributes;
 using NewsletterStudio.Plugins.Mailjet.Backoffice.Api;
+using NewsletterStudio.Plugins.Mailjet.Extensions;
+using Umbraco.Cms.Api.Common.Builders;
 using Umbraco.Cms.Web.Common.Routing;
 using Umbraco.Cms.Api.Management.Controllers;
 
@@ -129,10 +131,6 @@ public class MailjetController : ManagementApiControllerBase
 
                     MailjetResponse createResponse = await client.PostAsync(createRequest).ConfigureAwait(false);
 
-                    var createWasSuccess = createResponse.IsSuccessStatusCode;
-                    var createResponseData = createResponse.GetData();
-                    var createResponseDataAgain = createResponseData;
-
                 }
 
             }
@@ -140,8 +138,19 @@ public class MailjetController : ManagementApiControllerBase
         }
         else
         {
-            //TODO: Logging
-            return BadRequest($"Could not connect to the MailJet-server, response was: {response.GetErrorMessage()}.");
+            if (response.StatusCode == 401)
+                return BadRequest(new ProblemDetailsBuilder()
+                    .WithTitle("Authentication failed, please check API key and secret.")
+                    .WithErrorDetails($"Mailjet API returned 401 Unauthorized.")
+                    .Build()
+                );
+
+            return BadRequest(new ProblemDetailsBuilder()
+                .WithTitle("Operation failed, Mailjet returned error.")
+                .WithErrorDetails($"Mailjet error details: {response.GetErrorMessage()}")
+                .Build()
+            );
+
         }
 
         var res = new CheckWebhookConfigurationResponse()

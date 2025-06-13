@@ -30,16 +30,17 @@
     <PackageReference Include="Mailjet.Api" Version="1.2.2" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0-rc3,17)" />
-    <PackageReference Include="Umbraco.Cms.Api.Common" Version="[16.0.0-rc3,17)" />
-    <PackageReference Include="NewsletterStudio.Core" Version="[16.0.0-rc1,17)" IncludeAssets="compile" />
-    <PackageReference Include="NewsletterStudio.Web" Version="[16.0.0-rc1,17)" IncludeAssets="compile" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[16.0.0,17)" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" Version="[16.0.0,17)" />
+    <PackageReference Include="NewsletterStudio.Core" Version="[16.0.0,17)" IncludeAssets="compile" />
+    <PackageReference Include="NewsletterStudio.Web" Version="[16.0.0,17)" IncludeAssets="compile" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Backoffice\Api\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <Target Name="PreBuildClient_Debug" BeforeTargets="PreBuild" Condition="'$(Configuration)' == 'Debug'">
     <Message Text="Building (dev-mode), Client files in the ./Client-folder" Importance="High" />

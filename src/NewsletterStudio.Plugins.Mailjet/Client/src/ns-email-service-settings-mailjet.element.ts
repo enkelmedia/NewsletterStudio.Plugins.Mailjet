@@ -1,5 +1,5 @@
 import type { NsCheckboxElement } from '@newsletterstudio/umbraco/components';
-import { tryExecute, tryExecuteAndNotify } from '@umbraco-cms/backoffice/resources';
+import { tryExecute } from '@umbraco-cms/backoffice/resources';
 import { UmbTextStyles } from '@umbraco-cms/backoffice/style';
 import type { UmbNotificationContext } from "@umbraco-cms/backoffice/notification";
 import { UMB_NOTIFICATION_CONTEXT } from "@umbraco-cms/backoffice/notification";
@@ -87,12 +87,20 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
 
   async #handleConfigureNow(){
 
-    var configurationResult = await tryExecuteAndNotify(this,MailjetResource.configureNow({
+    var configurationResult = await tryExecute(this,MailjetResource.configureNow({
       body : this.#mapSettingsToModel()
-    }));
+    }),
+  {
+    //disableNotifications:true
+  });
+
+  console.log('res',configurationResult);
 
     if(!configurationResult.error){
       notifySuccess(this,'Webhook created');
+    }
+    else {
+      //notifyDanger(this,configurationResult.error.message)
     }
 
   }
@@ -143,7 +151,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
           <p>There are two ways to activate this:</p>
           <h3>Automatic configuration</h3>
           <p>
-              If the API key and secrets are configured we can configure the webhooks via Mailjet's API. Press the button to update the configuration.
+              If API key and secret are configured, we can automatically setup the webhooks via Mailjet's API. Press the button to update the configuration.
           </p>
           <uui-button
             look="outline"
@@ -197,6 +205,10 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
       background:#f5f5f5;
       border:1px solid #b8b8b8;
       padding:5px;
+    }
+
+    uui-button {
+      margin-top:10px;
     }
   `]
 }
