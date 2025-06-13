@@ -9,7 +9,7 @@
     <PackageId>NewsletterStudio.Plugins.Mailjet</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.newsletterstudio.org</PackageProjectUrl>
-    <PackageTags>Umbraco</PackageTags>
+    <PackageTags>umbraco umbraco-marketplace newsletter-studio transactional mailjet</PackageTags>
     <RepositoryUrl>https://github.com/enkelmedia/NewsletterStudio.Plugins.Mailjet</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Description>Plugin for Newsletter Studio to send emails via the Mailjet API.</Description>
@@ -17,10 +17,10 @@
     </PackageReleaseNotes>
     <IncludeSymbols>false</IncludeSymbols>
     <PackageIcon>icon.png</PackageIcon>
-    <Version>16.0.0</Version>
+    <Version>16.0.1</Version>
     <AssemblyVersion>16.0.0</AssemblyVersion>
-    <PackageVersion>16.0.0</PackageVersion>
-    <InformationalVersion>16.0.0</InformationalVersion>
+    <PackageVersion>16.0.1</PackageVersion>
+    <InformationalVersion>16.0.1</InformationalVersion>
     <Authors>Enkel Media Stockholm AB</Authors>
     <Copyright>Enkel Media Stockholm AB</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>

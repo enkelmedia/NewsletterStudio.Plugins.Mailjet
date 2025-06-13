@@ -1,13 +1,13 @@
 {
   "$schema": "../../../../../samples/UmbracoTestSite/umbraco-package-schema.json",
   "name": "Newsletter Studio Mailjet Plugin",
-  "version": "16.0.0",
+  "version": "16.0.1",
   "extensions": [
     {
       "type": "backofficeEntryPoint",
       "alias": "Ns.Plugin.Mailjet.EntryPoint",
       "name": "Newsletter Studio Plugin Mailjet Entry Point",
-      "js": "/App_Plugins/NewsletterStudio.Plugins.Mailjet/dist/ns-plugin.js?v1600",
+      "js": "/App_Plugins/NewsletterStudio.Plugins.Mailjet/dist/ns-plugin.js?v1601",
       "weight": 13000
     }
   ]
