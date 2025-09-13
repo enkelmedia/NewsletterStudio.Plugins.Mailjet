@@ -17,10 +17,10 @@
     </PackageReleaseNotes>
     <IncludeSymbols>false</IncludeSymbols>
     <PackageIcon>icon.png</PackageIcon>
-    <Version>15.0.0</Version>
+    <Version>15.0.1</Version>
     <AssemblyVersion>15.0.0</AssemblyVersion>
-    <PackageVersion>15.0.0</PackageVersion>
-    <InformationalVersion>15.0.0</InformationalVersion>
+    <PackageVersion>15.0.1</PackageVersion>
+    <InformationalVersion>15.0.1</InformationalVersion>
     <Authors>Enkel Media Stockholm AB</Authors>
     <Copyright>Enkel Media Stockholm AB</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
