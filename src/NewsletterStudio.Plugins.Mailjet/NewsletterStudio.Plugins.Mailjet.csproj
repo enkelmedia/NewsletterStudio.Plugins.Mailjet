@@ -38,10 +38,6 @@
   <ItemGroup>
     <None Include="build\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Backoffice\Api\" />
-    <Folder Include="Extensions\" />
-  </ItemGroup>
   <Target Name="PreBuildClient_Debug" BeforeTargets="PreBuild" Condition="'$(Configuration)' == 'Debug'">
     <Message Text="Building (dev-mode), Client files in the ./Client-folder" Importance="High" />
     <!-- <Exec Command="npm install" WorkingDirectory="$(ProjectDir)Client" />
