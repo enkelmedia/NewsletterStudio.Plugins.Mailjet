@@ -9,7 +9,7 @@ import { WorkspaceManageValueFrontendModel } from '@newsletterstudio/umbraco/bac
 import { GetConfigurationResponse, MailjetResource } from './backend-api';
 import { NS_ADMINISTRATION_WORKSPACE_CONTEXT, NsAdministrationWorkspaceContext } from '@newsletterstudio/umbraco/administration';
 import { notifySuccess } from '@newsletterstudio/umbraco/core';
-import { debounceTime, Observable } from '@umbraco-cms/backoffice/external/rxjs';
+import { debounceTime, Observable, filter } from '@umbraco-cms/backoffice/external/rxjs';
 import { umbBindToValidation } from '@umbraco-cms/backoffice/validation';
 
 /**
@@ -46,7 +46,10 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
 
       // Listening for changes for baseUrl using a debounce to avoid having to
       // load config from server to often.
-      this.debouncedBaseUrlChange = this.#workspaceContext?.model.pipe(debounceTime(500));
+      this.debouncedBaseUrlChange = this.#workspaceContext?.model.pipe(
+        filter((model): model is WorkspaceManageValueFrontendModel =>model !== undefined && model !== null),
+        debounceTime(500)
+      );
 
       this.observe(this.#workspaceContext?.model, (model) => {
         this._baseUrl = model?.baseUrl;
