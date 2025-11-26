@@ -1,4 +1,4 @@
-param ($version = "17.0.0-rc1",$versionSuffix = "")
+param ($version = "17.0.0",$versionSuffix = "-rc1")
 # Params
 # version = major.minor.patch
 # versionSuffix = eg -beta1, -rc1 (should include leading -). Leave as empty string if not needed.

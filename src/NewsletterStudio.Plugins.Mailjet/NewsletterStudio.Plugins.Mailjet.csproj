@@ -25,10 +25,8 @@
     <Copyright>Enkel Media Stockholm AB</Copyright>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <NoWarn>1701;1702;1591;1587;1570;1574;NU1507;NU1903;NU1902</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <UmbracoCmsVersion>[17.0.0-rc2,18.0.0)</UmbracoCmsVersion>
-    <NewsletterStudioVersion>[17.0.0-rc1,18.0.0)</NewsletterStudioVersion>
+    <UmbracoCmsVersion>[17.0.0-rc4,18.0.0)</UmbracoCmsVersion>
+    <NewsletterStudioVersion>[17.0.0-rc2,18.0.0)</NewsletterStudioVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mailjet.Api" Version="1.2.2" />
