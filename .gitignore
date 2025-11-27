@@ -377,6 +377,9 @@ FodyWeavers.xsd
 **/Media/**
 !**/Media/Web.config
 
+# Build stuff
+push.ps1
+
 # Ignore the copied App_Plugins folder
 samples/*/App_Plugins/*
 samples/Umbraco9.Website/wwwroot/css/Newsletter-Studio.css

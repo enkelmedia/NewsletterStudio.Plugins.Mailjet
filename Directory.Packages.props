@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <UmbracoCmsVersion>[17.0.0,18.0.0)</UmbracoCmsVersion>
+    <NewsletterStudioVersion>[17.0.0,18.0.0)</NewsletterStudioVersion>
+  </PropertyGroup>
+  <!-- Umbraco Dependencies -->
+  <ItemGroup>
+    <PackageVersion Include="Umbraco.Cms" Version="$(UmbracoCmsVersion)" />
+    <PackageVersion Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="$(UmbracoCmsVersion)" />
+    <PackageVersion Include="Umbraco.Cms.Web.Website" Version="$(UmbracoCmsVersion)" />
+    <PackageVersion Include="Umbraco.Cms.Api.Common" Version="$(UmbracoCmsVersion)" />
+
+    <PackageVersion Include="NewsletterStudio" Version="$(NewsletterStudioVersion)" />
+    <PackageVersion Include="NewsletterStudio.Core" Version="$(NewsletterStudioVersion)" />
+    <PackageVersion Include="NewsletterStudio.Web" Version="$(NewsletterStudioVersion)" />
+
+    <PackageVersion Include="Mailjet.Api" Version="1.2.2" />
+
+    <PackageVersion Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+  </ItemGroup>
+  <!-- Package Dependencies -->
+  <ItemGroup>
+    <PackageVersion Include="HtmlAgilityPack" Version="1.12.4" />
+  </ItemGroup>
+  <!-- Microsoft Dependencies -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+  <!-- Tests -->
+  <ItemGroup>
+    <PackageVersion Include="Moq" Version="4.14.5" />
+    <PackageVersion Include="NUnit" Version="3.12.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
+  </ItemGroup>
+</Project>

@@ -1,8 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
     <ContentTargetFolders>.</ContentTargetFolders>
@@ -10,32 +7,37 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://www.newsletterstudio.org</PackageProjectUrl>
     <PackageTags>umbraco umbraco-marketplace newsletter-studio transactional mailjet</PackageTags>
-    <RepositoryUrl>https://github.com/enkelmedia/NewsletterStudio.Plugins.Mailjet</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Description>Plugin for Newsletter Studio to send emails via the Mailjet API.</Description>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
     <IncludeSymbols>false</IncludeSymbols>
     <PackageIcon>icon.png</PackageIcon>
-    <Version>17.0.0</Version>
-    <AssemblyVersion>17.0.0</AssemblyVersion>
-    <PackageVersion>17.0.0-rc1</PackageVersion>
-    <InformationalVersion>17.0.0-rc1</InformationalVersion>
     <Authors>Enkel Media Stockholm AB</Authors>
     <Copyright>Enkel Media Stockholm AB</Copyright>
+    <!-- Generate documentation -->
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <NoWarn>1701;1702;1591;1587;1570;1574;NU1507;NU1903;NU1902</NoWarn>
-    <UmbracoCmsVersion>[17.0.0-rc4,18.0.0)</UmbracoCmsVersion>
-    <NewsletterStudioVersion>[17.0.0-rc2,18.0.0)</NewsletterStudioVersion>
+    <!-- PDBs beside DLLs -->
+    <DebugType>portable</DebugType>
+    <!-- Publish symbols as a separate .snupkg -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Make SourceLink work + deterministic CI build -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryUrl>https://github.com/enkelmedia/NewsletterStudio.Plugins.Mailjet</RepositoryUrl>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <Version>17.0.0</Version>
+    <AssemblyVersion>17.0.0</AssemblyVersion>
+    <PackageVersion>17.0.0</PackageVersion>
+    <InformationalVersion>17.0.0</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Mailjet.Api" Version="1.2.2" />
+    <PackageReference Include="Mailjet.Api" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="$(UmbracoCmsVersion)" />
-    <PackageReference Include="Umbraco.Cms.Api.Common" Version="$(UmbracoCmsVersion)" />
-    <PackageReference Include="NewsletterStudio.Core" Version="$(NewsletterStudioVersion)" IncludeAssets="compile" />
-    <PackageReference Include="NewsletterStudio.Web" Version="$(NewsletterStudioVersion)" IncludeAssets="compile" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" />
+    <PackageReference Include="Umbraco.Cms.Api.Common" />
+    <PackageReference Include="NewsletterStudio.Core" IncludeAssets="compile" />
+    <PackageReference Include="NewsletterStudio.Web" IncludeAssets="compile" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\icon.png" Pack="true" PackagePath="\" />
