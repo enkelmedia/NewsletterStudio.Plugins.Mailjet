@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="documentation.md" />
+    <File Path="readme.md" />
+  </Folder>
+  <Project Path="samples/UmbracoTestSite/UmbracoTestSite.csproj" />
+  <Project Path="src/NewsletterStudio.Plugins.Mailjet/NewsletterStudio.Plugins.Mailjet.csproj" />
+</Solution>
