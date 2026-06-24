@@ -6,21 +6,27 @@ using NewsletterStudio.Plugins.Mailjet.Webhook.Models;
 using Umbraco.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using NewsletterStudio.Core;
+using Umbraco.Cms.Core.Cache;
 
 namespace NewsletterStudio.Plugins.Mailjet.Webhook;
 
 public class MailjetWebhookController : Controller
 {
+    private const string WorkspaceKeysCacheKey = "NewsletterStudio.Plugins.Mailjet.Webhook.ValidWorkspaceKeys";
+
     private readonly IBounceOperationsService _bounceOperationsService;
     private readonly INewsletterStudioService _newsletterStudioService;
+    private readonly AppCaches _appCaches;
 
     public MailjetWebhookController(
         IBounceOperationsService bounceOperationsService,
-        INewsletterStudioService newsletterStudioService
+        INewsletterStudioService newsletterStudioService,
+        AppCaches appCaches
     ) 
     {
         _bounceOperationsService = bounceOperationsService;
         _newsletterStudioService = newsletterStudioService;
+        _appCaches = appCaches;
     }
 
     [HttpPost]
@@ -64,6 +70,24 @@ public class MailjetWebhookController : Controller
     }
 
     private async Task<List<Guid>> GetValidWorkspaceKeysAsync()
+    {
+        var keyLookup = _appCaches.RuntimeCache.GetCacheItem(
+            WorkspaceKeysCacheKey,
+            FetchValidWorkspaceKeysAsync,
+            TimeSpan.FromMinutes(2)) ?? FetchValidWorkspaceKeysAsync();
+
+        try
+        {
+            return await keyLookup.ConfigureAwait(false);
+        }
+        catch
+        {
+            _appCaches.RuntimeCache.ClearByKey(WorkspaceKeysCacheKey);
+            throw;
+        }
+    }
+
+    private async Task<List<Guid>> FetchValidWorkspaceKeysAsync()
     {
         var workspacesAndLists = await _newsletterStudioService.GetMailingListsForAllWorkspacesAsync().ConfigureAwait(false);
         return workspacesAndLists.Select(x => x.UniqueKey).ToList();
