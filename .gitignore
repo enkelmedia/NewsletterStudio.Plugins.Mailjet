@@ -387,3 +387,4 @@ samples/Umbraco8.Website/css/Newsletter-Studio.css
 samples/Umbraco9.Website/Views/MacroPartials/NewsletterStudioSignup.cshtml
 
 **/wwwroot/**/dist/**
+.codex/

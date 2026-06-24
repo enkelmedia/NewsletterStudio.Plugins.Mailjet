@@ -25,10 +25,10 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryUrl>https://github.com/enkelmedia/NewsletterStudio.Plugins.Mailjet</RepositoryUrl>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <Version>17.0.0</Version>
-    <AssemblyVersion>17.0.0</AssemblyVersion>
-    <PackageVersion>17.0.0</PackageVersion>
-    <InformationalVersion>17.0.0</InformationalVersion>
+    <Version>18.0.0-rc1</Version>
+    <AssemblyVersion>18.0.0</AssemblyVersion>
+    <PackageVersion>18.0.0-rc1</PackageVersion>
+    <InformationalVersion>18.0.0-rc1</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Mailjet.Api" />

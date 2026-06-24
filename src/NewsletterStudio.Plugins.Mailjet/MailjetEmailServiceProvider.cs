@@ -20,8 +20,10 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
     public const string ProviderAlias = "mailjet";
 
     public string Alias => ProviderAlias;
+
     public string DisplayName => "Mailjet";
-    public Dictionary<string, object> Settings { get; set; }
+
+    public Dictionary<string, object> Settings { get; set; } = new Dictionary<string, object>();
 
     public MailjetEmailServiceProvider(
         ILogger<MailjetEmailServiceProvider> logger,
@@ -52,6 +54,9 @@ public class MailjetEmailServiceProvider : IEmailServiceProvider
         return errors;
 
     }
+
+    public Task<ErrorCollection> ValidateSettingsAsync(Dictionary<string, object> settings)
+        => Task.FromResult(ValidateSettings(settings));
 
     public async Task SendAsync(List<SendEmailJob> batch)
     {

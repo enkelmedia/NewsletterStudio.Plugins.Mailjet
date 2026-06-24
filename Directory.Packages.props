@@ -2,8 +2,8 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <UmbracoCmsVersion>[17.0.0,18.0.0)</UmbracoCmsVersion>
-    <NewsletterStudioVersion>[17.0.0,18.0.0)</NewsletterStudioVersion>
+    <UmbracoCmsVersion>[18.0.0-rc3,19.0.0)</UmbracoCmsVersion>
+    <NewsletterStudioVersion>[18.0.0-rc1,19.0.0)</NewsletterStudioVersion>
   </PropertyGroup>
   <!-- Umbraco Dependencies -->
   <ItemGroup>

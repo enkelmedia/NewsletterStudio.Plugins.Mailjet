@@ -4,7 +4,6 @@ using NewsletterStudio.Core.Public;
 using NewsletterStudio.Plugins.Mailjet.Dtos;
 using NewsletterStudio.Plugins.Mailjet.Webhook.Models;
 using Umbraco.Extensions;
-using Umbraco.Cms.Core.Cache;
 using Microsoft.AspNetCore.Mvc;
 using NewsletterStudio.Core;
 
@@ -14,24 +13,21 @@ public class MailjetWebhookController : Controller
 {
     private readonly IBounceOperationsService _bounceOperationsService;
     private readonly INewsletterStudioService _newsletterStudioService;
-    private readonly AppCaches _appCaches;
 
     public MailjetWebhookController(
-        AppCaches appCaches,
         IBounceOperationsService bounceOperationsService,
         INewsletterStudioService newsletterStudioService
     ) 
     {
         _bounceOperationsService = bounceOperationsService;
         _newsletterStudioService = newsletterStudioService;
-        _appCaches = appCaches;
     }
 
     [HttpPost]
     [Route(NewsletterStudioConstants.Paths.Routes.ControllersRootRoute + "mailjet/webhook")]
-    public IActionResult Webhook([FromBody]List<MailJetWebhookEvent> events, [FromQuery] string secret)
+    public async Task<IActionResult> Webhook([FromBody]List<MailJetWebhookEvent> events, [FromQuery] string secret)
     {
-        var result = Do_Handle(secret, events); 
+        var result = await Do_HandleAsync(secret, events).ConfigureAwait(false);
 
         if(result.Success)
             return Content("Done");
@@ -40,7 +36,7 @@ public class MailjetWebhookController : Controller
         return Content(result.Message);
     }
 
-    private DoHandleResponse Do_Handle(string secret, List<MailJetWebhookEvent> events)
+    private async Task<DoHandleResponse> Do_HandleAsync(string secret, List<MailJetWebhookEvent> events)
     {
         if (string.IsNullOrEmpty(secret))
             return new DoHandleResponse(false, "Secret was empty");
@@ -48,7 +44,7 @@ public class MailjetWebhookController : Controller
         if(!Guid.TryParse(secret, out Guid workspaceKey))
             return new DoHandleResponse(false, "Invalid key-format");
 
-        var validKeys = GetValidWorkspaceKeys();
+        var validKeys = await GetValidWorkspaceKeysAsync().ConfigureAwait(false);
 
         if (!validKeys.Contains(workspaceKey))
             return new DoHandleResponse(false, "Invalid key");
@@ -56,9 +52,9 @@ public class MailjetWebhookController : Controller
         foreach (var mjEvent in events)
         {
             string externalId = mjEvent.MessageId.ToString();
-            string errorMessage = HandleAndExtractErrorMessage(mjEvent);
+            string errorMessage = await HandleAndExtractErrorMessageAsync(mjEvent).ConfigureAwait(false);
 
-            _bounceOperationsService.SetTrackingItemError(externalId, errorMessage);
+            await _bounceOperationsService.SetTrackingItemErrorAsync(externalId, errorMessage).ConfigureAwait(false);
         }
 
         return new DoHandleResponse()
@@ -67,17 +63,13 @@ public class MailjetWebhookController : Controller
         };
     }
 
-    private List<Guid> GetValidWorkspaceKeys()
+    private async Task<List<Guid>> GetValidWorkspaceKeysAsync()
     {
-        return _appCaches.RuntimeCache.GetCacheItem<List<Guid>>("ns_mj_workspaces", () =>
-        {
-            var workspacesAndLists = _newsletterStudioService.GetMailingListsForAllWorkspaces();
-            return workspacesAndLists.Select(x => x.UniqueKey).ToList();
-
-        },TimeSpan.FromMinutes(2))!;
+        var workspacesAndLists = await _newsletterStudioService.GetMailingListsForAllWorkspacesAsync().ConfigureAwait(false);
+        return workspacesAndLists.Select(x => x.UniqueKey).ToList();
     }
 
-    private string HandleAndExtractErrorMessage(MailJetWebhookEvent mjEvent)
+    private async Task<string> HandleAndExtractErrorMessageAsync(MailJetWebhookEvent mjEvent)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -94,18 +86,18 @@ public class MailjetWebhookController : Controller
 
             if (mjEvent.HardBounce.HasValue && mjEvent.HardBounce.Value)
             {
-                SetRecipientAsPermanentError(mjEvent,sb.ToString());
+                await SetRecipientAsPermanentErrorAsync(mjEvent,sb.ToString()).ConfigureAwait(false);
             }
         }
 
         return sb.ToString();
     }
 
-    public void SetRecipientAsPermanentError(MailJetWebhookEvent mjEvent,string errorMessage)
+    public Task SetRecipientAsPermanentErrorAsync(MailJetWebhookEvent mjEvent,string errorMessage)
     {
         //NOTE: There are currently no way to pass a message to explain why a recipient
         //      was set as permanent error so we can't pass anything.
-        _bounceOperationsService.SetRecipientPermanentError(mjEvent.MessageId.ToString());
+        return _bounceOperationsService.SetRecipientPermanentErrorAsync(mjEvent.MessageId.ToString());
     }
         
 }

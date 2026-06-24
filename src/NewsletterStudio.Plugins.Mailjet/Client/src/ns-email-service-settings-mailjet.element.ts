@@ -73,7 +73,7 @@ export class NsEmailServiceSettingsSmtpElement extends NsEmailServiceProviderUiB
       body : this.#mapSettingsToModel()
     }));
 
-    if(!configurationResult.error){
+    if(!configurationResult.error && 'data' in configurationResult){
       this.configuration = configurationResult.data;
     }
   }

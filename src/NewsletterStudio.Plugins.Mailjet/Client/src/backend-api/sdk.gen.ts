@@ -4,7 +4,7 @@ import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import type { ConfigureNowData, ConfigureNowErrors, ConfigureNowResponses, GetConfigurationData, GetConfigurationErrors, GetConfigurationResponses } from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
+export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
      * You can provide a client instance returned by `createClient()` instead of
      * individual options. This might be also useful if you want to implement a
@@ -19,36 +19,26 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 export class MailjetResource {
-    public static configureNow<ThrowOnError extends boolean = true>(options?: Options<ConfigureNowData, ThrowOnError>) {
-        return (options?.client ?? client).post<ConfigureNowResponses, ConfigureNowErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
+    public static configureNow<ThrowOnError extends boolean = true>(options: Options<ConfigureNowData, ThrowOnError>) {
+        return (options.client ?? client).post<ConfigureNowResponses, ConfigureNowErrors, ThrowOnError>({
+            security: [{ scheme: 'bearer', type: 'http' }],
             url: '/umbraco/management/api/newsletter-studio-mailjet/configure-now',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }
     
-    public static getConfiguration<ThrowOnError extends boolean = true>(options?: Options<GetConfigurationData, ThrowOnError>) {
-        return (options?.client ?? client).post<GetConfigurationResponses, GetConfigurationErrors, ThrowOnError>({
-            security: [
-                {
-                    scheme: 'bearer',
-                    type: 'http'
-                }
-            ],
+    public static getConfiguration<ThrowOnError extends boolean = true>(options: Options<GetConfigurationData, ThrowOnError>) {
+        return (options.client ?? client).post<GetConfigurationResponses, GetConfigurationErrors, ThrowOnError>({
+            security: [{ scheme: 'bearer', type: 'http' }],
             url: '/umbraco/management/api/newsletter-studio-mailjet/get-configuration',
             ...options,
             headers: {
                 'Content-Type': 'application/json',
-                ...options?.headers
+                ...options.headers
             }
         });
     }

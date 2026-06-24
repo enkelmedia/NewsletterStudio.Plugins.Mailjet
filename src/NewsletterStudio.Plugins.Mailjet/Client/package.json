@@ -1,7 +1,7 @@
 {
   "name": "ns-plugin",
   "private": true,
-  "version": "17.0.0",
+  "version": "18.0.0-rc1",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build --emptyOutDir",
@@ -10,13 +10,13 @@
     "generate:api": "openapi-ts"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.85.0",
-    "@newsletterstudio/umbraco": "^17.0.0",
+    "@newsletterstudio/umbraco": "file:D:/Development/Newsletter Studio/Arkiv/Releases/newsletterstudio-umbraco-18.0.0-rc1.tgz",
+    "@umbraco-cms/backoffice": "18.0.0-rc3",
     "lit": "^3.3.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.2.2"
+    "typescript": "^6.0.3",
+    "vite": "^7.3.2"
   },
   "volta": {
-    "node": "22.21.1"
+    "node": "24.15.0"
   }
 }
